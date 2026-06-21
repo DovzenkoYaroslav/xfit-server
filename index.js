@@ -14,13 +14,14 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   requireTLS: true,
+  family: 4,
   auth: {
     user: 'xfitbotmb@gmail.com',
     pass: 'tigo tjnn czfh yxqy'
   },
-  connectionTimeout: 15000,
-  greetingTimeout: 15000,
-  socketTimeout: 15000
+  connectionTimeout: 20000,
+  greetingTimeout: 20000,
+  socketTimeout: 20000
 });
 
 const CLUB_EMAILS = {
