@@ -14,7 +14,10 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: 'xfitbotmb@gmail.com', 
     pass: 'zfnr jemw tujw gtdm' 
-  }
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 });
 
 const CLUB_EMAILS = {
@@ -102,7 +105,9 @@ app.post('/api/forgot-password', async (req, res) => {
       text: `Ваш код для сброса пароля: ${code}`
     };
 
-    await transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions)
+      .then(() => console.log('Код отправлен на', email))
+      .catch(err => console.error('Ошибка отправки кода:', err.message));
     res.json({ message: 'Код отправлен' });
 
   } catch (err) { res.status(500).json({ error: 'Ошибка сервера' }); }
