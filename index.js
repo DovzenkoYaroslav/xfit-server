@@ -164,12 +164,9 @@ app.post('/api/applications', async (req, res) => {
         `
       };
 
-      try {
-        await transporter.sendMail(mailOptions);
-        console.log('Письмо ушло на', managerEmail);
-      } catch (emailErr) {
-        console.error('ОШИБКА ПОЧТЫ:', emailErr.message);
-      }
+      transporter.sendMail(mailOptions)
+        .then(() => console.log('Письмо ушло на', managerEmail))
+        .catch(err => console.error('ОШИБКА ПОЧТЫ:', err.message));
     }
     res.status(201).json(newApp);
   } catch (err) { 
