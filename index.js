@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const RESEND_KEY = 're_bbAQ1wXm_FP8fxXEeJeRLUdQpUvR2iBRE';
+const RESEND_KEY = 're_iYWQPSjv_JYv5wRgW4Dae3HcECeGMS733';
 const resend = new Resend(RESEND_KEY);
 const FROM_EMAIL = 'onboarding@resend.dev';
 
