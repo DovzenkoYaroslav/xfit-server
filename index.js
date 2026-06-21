@@ -96,19 +96,14 @@ app.post('/api/forgot-password', async (req, res) => {
     await user.save();
 
     const mailOptions = {
-      from: 'xfitmobile@gmail.com',
+      from: 'xfitbotmb@gmail.com',
       to: email,
       subject: 'Код восстановления пароля XFIT',
       text: `Ваш код для сброса пароля: ${code}`
     };
 
-    transporter.sendMail(mailOptions, (error) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ error: 'Ошибка отправки письма' });
-      }
-      res.json({ message: 'Код отправлен' });
-    });
+    await transporter.sendMail(mailOptions);
+    res.json({ message: 'Код отправлен' });
 
   } catch (err) { res.status(500).json({ error: 'Ошибка сервера' }); }
 });
@@ -154,25 +149,27 @@ app.post('/api/applications', async (req, res) => {
       }
 
       const mailOptions = {
-        from: 'xfitmobile@gmail.com',
+        from: 'xfitbotmb@gmail.com',
         to: managerEmail,
-        subject: `🔥 Новая заявка: ${req.body.fullName} (${req.body.club})`,
+        subject: `Новая заявка: ${req.body.fullName} (${req.body.club})`,
         text: `
 --- ДЕТАЛИ ЗАЯВКИ ---
-👤 ФИО: ${req.body.fullName}
-📱 Телефон: ${req.body.phone}
-🏢 Компания: ${req.body.company}
-💳 Тип карты: ${req.body.cardType}
-📍 Клуб: ${req.body.club}${dateString}
+ФИО: ${req.body.fullName}
+Телефон: ${req.body.phone}
+Компания: ${req.body.company}
+Тип карты: ${req.body.cardType}
+Клуб: ${req.body.club}${dateString}
 ---------------------
 Пожалуйста, свяжитесь с клиентом.
         `
       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) console.log('❌ ОШИБКА ПОЧТЫ:', error);
-        else console.log('📧 Письмо ушло на', managerEmail);
-      });
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log('Письмо ушло на', managerEmail);
+      } catch (emailErr) {
+        console.error('ОШИБКА ПОЧТЫ:', emailErr.message);
+      }
     }
     res.status(201).json(newApp);
   } catch (err) { 
