@@ -20,7 +20,7 @@ const CLUB_EMAILS = {
   'Сан-Сити': 'Corpmanager42@xfit.ru',
   'Химки': 'corpmanager47@xfit.ru',
   'Чистые пруды': 'corpmanager61@xfit.ru',
-  'Проверка': 'yrik9890@gmail.com',
+  'Проверка': 'd4mnmanager@gmail.com',
   'Проверка 2': 's.vladykina@xfit.ru'
 };
 
