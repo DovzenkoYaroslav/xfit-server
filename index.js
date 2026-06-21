@@ -10,14 +10,17 @@ app.use(cors());
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
-    user: 'xfitbotmb@gmail.com', 
-    pass: 'tigo tjnn czfh yxqy' 
+    user: 'xfitbotmb@gmail.com',
+    pass: 'tigo tjnn czfh yxqy'
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 15000
 });
 
 const CLUB_EMAILS = {
