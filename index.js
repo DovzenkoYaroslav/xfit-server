@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'xfitbotmb@gmail.com', 
-    pass: 'zfnr jemw tujw gtdm' 
+    pass: 'tigo tjnn czfh yxqy' 
   },
   connectionTimeout: 10000,
   greetingTimeout: 10000,
