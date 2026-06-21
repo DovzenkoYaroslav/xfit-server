@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 
 const app = express();
 const PORT = process.env.PORT || 3000; 
@@ -9,19 +10,21 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  requireTLS: true,
-  family: 4,
-  auth: {
-    user: 'xfitbotmb@gmail.com',
-    pass: 'tigo tjnn czfh yxqy'
-  },
-  connectionTimeout: 20000,
-  greetingTimeout: 20000,
-  socketTimeout: 20000
+function createTransporter(host) {
+  return nodemailer.createTransport({
+    host, port: 587, secure: false, requireTLS: true,
+    auth: { user: 'xfitbotmb@gmail.com', pass: 'tigo tjnn czfh yxqy' },
+    connectionTimeout: 15000, greetingTimeout: 15000, socketTimeout: 15000,
+    logger: true, debug: true
+  });
+}
+
+let transporter = createTransporter('smtp.gmail.com');
+dns.resolve4('smtp.gmail.com', (err, addresses) => {
+  if (!err) {
+    console.log('SMTP IPv4 resolved:', addresses[0]);
+    transporter = createTransporter(addresses[0]);
+  }
 });
 
 const CLUB_EMAILS = {
