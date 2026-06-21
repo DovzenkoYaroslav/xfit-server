@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
-const dns = require('dns');
+const { Resend } = require('resend');
 
 const app = express();
 const PORT = process.env.PORT || 3000; 
@@ -10,22 +9,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-function createTransporter(host) {
-  return nodemailer.createTransport({
-    host, port: 587, secure: false, requireTLS: true,
-    auth: { user: 'xfitbotmb@gmail.com', pass: 'tigo tjnn czfh yxqy' },
-    connectionTimeout: 15000, greetingTimeout: 15000, socketTimeout: 15000,
-    logger: true, debug: true
-  });
-}
-
-let transporter = createTransporter('smtp.gmail.com');
-dns.resolve4('smtp.gmail.com', (err, addresses) => {
-  if (!err) {
-    console.log('SMTP IPv4 resolved:', addresses[0]);
-    transporter = createTransporter(addresses[0]);
-  }
-});
+const RESEND_KEY = 're_bbAQ1wXm_FP8fxXEeJeRLUdQpUvR2iBRE';
+const resend = new Resend(RESEND_KEY);
+const FROM_EMAIL = 'onboarding@resend.dev';
 
 const CLUB_EMAILS = {
   'Авиамоторная': 'corpmanager41@xfit.ru',
@@ -105,14 +91,14 @@ app.post('/api/forgot-password', async (req, res) => {
     user.resetCode = code;
     await user.save();
 
-    const mailOptions = {
-      from: 'xfitbotmb@gmail.com',
+    const mailData = {
+      from: FROM_EMAIL,
       to: email,
       subject: 'Код восстановления пароля XFIT',
       text: `Ваш код для сброса пароля: ${code}`
     };
 
-    transporter.sendMail(mailOptions)
+    resend.emails.send(mailData)
       .then(() => console.log('Код отправлен на', email))
       .catch(err => console.error('Ошибка отправки кода:', err.message));
     res.json({ message: 'Код отправлен' });
@@ -160,8 +146,8 @@ app.post('/api/applications', async (req, res) => {
         dateString = `\n📅 Дата окончания карты: ${formattedDate}`;
       }
 
-      const mailOptions = {
-        from: 'xfitbotmb@gmail.com',
+      const mailData = {
+        from: FROM_EMAIL,
         to: managerEmail,
         subject: `Новая заявка: ${req.body.fullName} (${req.body.club})`,
         text: `
@@ -176,7 +162,7 @@ app.post('/api/applications', async (req, res) => {
         `
       };
 
-      transporter.sendMail(mailOptions)
+      resend.emails.send(mailData)
         .then(() => console.log('Письмо ушло на', managerEmail))
         .catch(err => console.error('ОШИБКА ПОЧТЫ:', err.message));
     }
